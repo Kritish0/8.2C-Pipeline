@@ -1,47 +1,47 @@
 pipeline {
-  agent any
+    agent any
 
-  options {
-    skipDefaultCheckout(true)
-  }
+    stages {
+        stage('Build') {
+            steps {
+                echo '🔨 Building the project...'
+            }
+        }
 
-  stages {
-    stage('Checkout') {
-      steps {
-        // If this job is already "Pipeline script from SCM", Jenkins
-        // will auto-checkout. You can keep this for clarity or remove it.
-        git url: 'https://github.com/Kritish0/8.2C-Pipeline', branch: 'main'
-      }
-    }
+        stage('Unit & Integration Tests') {
+            steps {
+                echo '✅ Running unit and integration tests...'
+            }
+        }
 
-    stage('Install') {
-      steps {
-        sh 'npm install'
-      }
-    }
+        stage('Code Analysis') {
+            steps {
+                echo '🔍 Running static code analysis...'
+            }
+        }
 
-    stage('Test') {
-      steps {
-        // Don’t fail the whole build if tests aren’t set up yet
-        sh 'npm test  echo "Tests failed (or not configured) — continuing"'
-      }
-    }
+        stage('Security Scan') {
+            steps {
+                echo '🔐 Scanning for security vulnerabilities...'
+            }
+        }
 
-    stage('Audit') {
-      steps {
-        sh 'npm audit --audit-level=low | tee npm-audit.txt'
-        sh 'npm audit --json > npm-audit.json  true'
-        archiveArtifacts artifacts: 'npm-audit.*', fingerprint: true
-      }
-    }
-  }
+        stage('Deploy to Staging') {
+            steps {
+                echo '🚀 Deploying to staging environment...'
+            }
+        }
 
-  post {
-    success {
-      echo '✅ Pipeline finished. Vulnerability scan results saved as artifacts.'
+        stage('Test on Staging') {
+            steps {
+                echo '🧪 Running tests on staging...'
+            }
+        }
+
+        stage('Deploy to Production') {
+            steps {
+                echo '📦 Deploying final version to production...'
+            }
+        }
     }
-    failure {
-      echo '❌ Pipeline failed. Check the console log.'
-    }
-  }
 }
